@@ -1,6 +1,7 @@
 package in.yuchengl.scoutui;
 
 import android.app.Activity;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
 import android.hardware.Camera;
@@ -11,6 +12,7 @@ import android.view.SurfaceView;
 import java.util.List;
 
 public class CameraActivity extends Activity {
+    private GLSurfaceView mScoutSurfaceView;
     private Camera mCamera;
     private SurfaceView mPreview;
     private SurfaceHolder mHolder;
@@ -23,7 +25,7 @@ public class CameraActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-
+        /* Open back camera */
         int num = Camera.getNumberOfCameras();
         Camera.CameraInfo info = new Camera.CameraInfo();
         for (int i = 0; i < num; i++) {
@@ -40,11 +42,15 @@ public class CameraActivity extends Activity {
 
         setCameraDisplayOrientation(this, mCameraId, mCamera);
 
+        /* Set up surface view for camera feed */
         mInPreview = false;
         mPreview = (SurfaceView) findViewById(R.id.camera_preview);
         mHolder = mPreview.getHolder();
         mHolder.addCallback(previewSurfaceCallback);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        /* Initialize overlay surface view */
+        mScoutSurfaceView = (GLSurfaceView) findViewById(R.id.scoutSurfaceView);
     }
 
     @Override
