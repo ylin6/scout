@@ -3,4 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="sign_up"><u>Sign Up</u></string>
     <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="title_activity_list">ListActivity</string>
+    <string name="title_activity_main_friends">MainFriendsActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
