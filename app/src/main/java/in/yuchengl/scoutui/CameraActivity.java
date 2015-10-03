@@ -24,23 +24,7 @@ public class CameraActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-
-        /* Open back camera */
-        int num = Camera.getNumberOfCameras();
-        Camera.CameraInfo info = new Camera.CameraInfo();
-        for (int i = 0; i < num; i++) {
-            Camera.getCameraInfo(i, info);
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                mCameraId = i;
-                mCamera = Camera.open(mCameraId);
-            }
-        }
-
-        if (mCamera == null) {
-            Log.d("myError", "Failed to open back camera");
-        }
-
-        setCameraDisplayOrientation(this, mCameraId, mCamera);
+        openCamera();
 
         /* Set up surface view for camera feed */
         mInPreview = false;
@@ -59,14 +43,19 @@ public class CameraActivity extends Activity {
             mCamera.stopPreview();
         }
         mInPreview = false;
-
-        mCamera.release();
         super.onPause();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStop() {
+        mCamera.release();
+        super.onStop();
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        openCamera();
     }
 
     private Camera.Size getPreviewSize(int width, int height, Camera.Parameters params) {
@@ -89,6 +78,24 @@ public class CameraActivity extends Activity {
         }
 
         return(result);
+    }
+
+    private void openCamera() {
+        int num = Camera.getNumberOfCameras();
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        for (int i = 0; i < num; i++) {
+            Camera.getCameraInfo(i, info);
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                mCameraId = i;
+                mCamera = Camera.open(mCameraId);
+            }
+        }
+
+        if (mCamera == null) {
+            Log.d("myError", "Failed to open back camera");
+        }
+
+        setCameraDisplayOrientation(this, mCameraId, mCamera);
     }
 
     private static void setCameraDisplayOrientation(Activity activity,
