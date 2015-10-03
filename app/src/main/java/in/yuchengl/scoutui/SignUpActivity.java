@@ -8,6 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.parse.Parse;
+
+import java.util.List;
+
 public class SignUpActivity extends AppCompatActivity {
 
     @Override
@@ -16,13 +20,11 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
     }
 
-    public void BackToLogin(View view){
-        Intent back = new Intent(this, LoginActivity.class);
-        startActivity(back);
+    public void SignUp(View view) {
+        Intent nextIntent = new Intent(this, ListActivity.class);
+        startActivity(nextIntent);
     }
 
 }

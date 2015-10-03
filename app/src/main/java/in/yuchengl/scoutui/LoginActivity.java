@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.parse.Parse;
+
 public class LoginActivity extends AppCompatActivity {
 
     @Override
@@ -27,6 +29,11 @@ public class LoginActivity extends AppCompatActivity {
         EditText username = (EditText) findViewById(R.id.username);
         EditText password = (EditText) findViewById(R.id.password);
 
+        // Enable Local Datastore.
+        Parse.enableLocalDatastore(this);
+
+        Parse.initialize(this, "texSbr87THubJtJbjminaY9SPtAbX4wB0RNac5xJ",
+                "RBDRmL8yMw4cBBG1Vm6WUOCjIhhsQTgIh7YS7o1o");
     }
 
     public void newUser(View view){
