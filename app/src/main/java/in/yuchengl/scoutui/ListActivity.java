@@ -1,5 +1,6 @@
 package in.yuchengl.scoutui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.parse.ParseUser;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -21,6 +25,8 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        redirectIfNotLoggedIn(this);
 
         // Dummy DB
         ListItem user1 = new ListItem("msprigg", "image.png", true);
@@ -66,6 +72,19 @@ public class ListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private ParseUser redirectIfNotLoggedIn(Context context) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            return currentUser;
+        } else {
+            Toast.makeText(context, "You must login first",
+                    Toast.LENGTH_SHORT).show();
+            Intent redirectIntent = new Intent(context, LoginActivity.class);
+            context.startActivity(redirectIntent);
+            return null;
+        }
     }
 
 }

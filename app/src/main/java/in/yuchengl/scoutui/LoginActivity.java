@@ -13,8 +13,13 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.LogInCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
 
-        Parse.initialize(this, "texSbr87THubJtJbjminaY9SPtAbX4wB0RNac5xJ",
-                "RBDRmL8yMw4cBBG1Vm6WUOCjIhhsQTgIh7YS7o1o");
+        Parse.initialize(this, "ZFqxViHGMZC0FRXXu1QlQJF44lewIZ4VBLDAPlZ5",
+                "3cmt5L56qE1NpMcqzZInRGNhIhNcy1feJb9cKIdx");
     }
 
     public void newUser(View view){
@@ -42,9 +47,26 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void signIn(View view){
-        //TODO CHECK FOR AUTHORIZATION
-        Intent signInIntent = new Intent(this, ListActivity.class);
-        startActivity(signInIntent);
+        EditText usernameText = (EditText) findViewById(R.id.username);
+        EditText passwordText = (EditText) findViewById(R.id.password);
+
+        String username = usernameText.getText().toString();
+        String password = passwordText.getText().toString();
+
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (user != null) {
+                    Toast.makeText(getApplicationContext(), "Logged in",
+                            Toast.LENGTH_SHORT).show();
+                    Intent nextIntent = new Intent(getApplicationContext(), ListActivity.class);
+                    startActivity(nextIntent);
+                } else {
+                    Toast.makeText(getApplicationContext(), e.getLocalizedMessage().toString(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 }
