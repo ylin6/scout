@@ -34,4 +34,10 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(createNewUser);
     }
 
+    public void signIn(View view){
+        //TODO CHECK FOR AUTHORIZATION
+        Intent signInIntent = new Intent(this, ListActivity.class);
+        startActivity(signInIntent);
+    }
+
 }
