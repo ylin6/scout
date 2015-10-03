@@ -19,16 +19,13 @@
         android:orientation="vertical">
 
 
-        <TextView
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="NEW USER"
             android:textAlignment="center"
-            android:textSize="50sp"
-            android:textColor="@color/colorPrimary"
-            android:fontFamily="sans-serif-light"
-        />
+            android:src="@drawable/scoutlogo"
+            android:id="@+id/Title" />
 
         <EditText
             android:hint="Username"

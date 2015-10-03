@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ScoutUI</string>
+    <string name="app_name">SCOUT</string>
     <string name="action_settings">Settings</string>
     <string name="sign_up"><u>Sign Up</u></string>
     <string name="title_activity_sign_up">SignUpActivity</string>
