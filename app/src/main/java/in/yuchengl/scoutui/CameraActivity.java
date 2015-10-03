@@ -5,19 +5,25 @@ import android.os.Bundle;
 import android.util.Log;
 import android.hardware.Camera;
 import android.view.Surface;
-import android.widget.FrameLayout;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+
+import java.util.List;
 
 public class CameraActivity extends Activity {
     private Camera mCamera;
-    private CameraPreview mPreview;
+    private SurfaceView mPreview;
+    private SurfaceHolder mHolder;
     private int mCameraId;
+    private boolean mInPreview;
+    public final String TAG = "SCOUT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        /* open back camera */
+
         int num = Camera.getNumberOfCameras();
         Camera.CameraInfo info = new Camera.CameraInfo();
         for (int i = 0; i < num; i++) {
@@ -34,15 +40,20 @@ public class CameraActivity extends Activity {
 
         setCameraDisplayOrientation(this, mCameraId, mCamera);
 
-        mPreview = new CameraPreview(this, mCamera);
-        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-        preview.addView(mPreview);
+        mInPreview = false;
+        mPreview = (SurfaceView) findViewById(R.id.camera_preview);
+        mHolder = mPreview.getHolder();
+        mHolder.addCallback(previewSurfaceCallback);
+        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
     @Override
     public void onPause() {
+        if (mInPreview) {
+            mCamera.stopPreview();
+        }
+        mInPreview = false;
         super.onPause();
-        mCamera.stopPreview();
     }
 
     @Override
@@ -50,8 +61,30 @@ public class CameraActivity extends Activity {
         super.onResume();
     }
 
+    private Camera.Size getPreviewSize(int width, int height, Camera.Parameters params) {
+        Camera.Size result = null;
+
+        for (Camera.Size size : params.getSupportedPreviewSizes()) {
+            if (size.width <= width && size.height <= height) {
+                if (result == null) {
+                    result = size;
+                }
+                else {
+                    int resultArea = result.width * result.height;
+                    int newArea = size.width * size.height;
+
+                    if (newArea > resultArea) {
+                        result = size;
+                    }
+                }
+            }
+        }
+
+        return(result);
+    }
+
     private static void setCameraDisplayOrientation(Activity activity,
-                                                   int cameraId, android.hardware.Camera camera) {
+                                                    int cameraId, android.hardware.Camera camera) {
         android.hardware.Camera.CameraInfo info =
                 new android.hardware.Camera.CameraInfo();
         android.hardware.Camera.getCameraInfo(cameraId, info);
@@ -75,7 +108,41 @@ public class CameraActivity extends Activity {
         camera.setDisplayOrientation(result);
     }
 
+    SurfaceHolder.Callback previewSurfaceCallback = new SurfaceHolder.Callback() {
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            try {
+                mCamera.setPreviewDisplay(holder);
+            } catch(Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
 
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            Camera.Parameters params = mCamera.getParameters();
 
+            Camera.Size size = getPreviewSize(width, height, params);
+            if (size != null) {
+                params.setPreviewSize(size.width, size.height);
+                mCamera.setParameters(params);
+                mCamera.startPreview();
+                mInPreview = true;
+
+                List<String> focusModes = params.getSupportedFocusModes();
+                if (focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+                    params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                    mCamera.setParameters(params);
+                    mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                        @Override
+                        public void onAutoFocus(boolean success, Camera camera) {}
+                    });
+                }
+            }
+        }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) {}
+    };
 
 }
