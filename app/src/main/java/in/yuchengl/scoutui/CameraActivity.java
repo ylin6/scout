@@ -59,6 +59,8 @@ public class CameraActivity extends Activity {
             mCamera.stopPreview();
         }
         mInPreview = false;
+
+        mCamera.release();
         super.onPause();
     }
 
