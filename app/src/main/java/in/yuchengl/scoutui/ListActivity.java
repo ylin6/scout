@@ -21,11 +21,11 @@ public class ListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Dummy DB
-        ListItem user1 = new ListItem("msprigg", "image.png", false);
+        ListItem user1 = new ListItem("msprigg", "image.png", true);
         ListItem user2 = new ListItem("gmartinez", "image2.png", true);
         ListItem user3 = new ListItem("ylin6", "image3.png", true);
-        ListItem user4 = new ListItem("Mosise","image4.png", false);
-        ListItem user5 = new ListItem("Mosise","image4.png", false);
+        ListItem user4 = new ListItem("Mosise","image4.png", true);
+        ListItem user5 = new ListItem("Mosise","image4.png", true);
         ListItem[] friends = {user1, user2, user3, user4, user5, user5, user1, user4, user3, user2, user3, user4, user1 };
 
         ListAdapter friendListAdapter = new CustomListAdapter(this, friends);

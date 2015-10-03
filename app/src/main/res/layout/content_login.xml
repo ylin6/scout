@@ -61,6 +61,7 @@
             android:textSize="25sp"
             android:fontFamily="sans-serif-light"
             android:layout_margin="5dp"
+            android:onClick="signIn"
             android:id="@+id/login"/>
         <Button
             android:layout_width="match_parent"
