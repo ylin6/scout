@@ -42,17 +42,7 @@ class CustomListAdapter extends ArrayAdapter<ListItem> {
 
 
         userName.setText(userArrayItemName);
-
-
-
-
-        if(userArrayItemStatus == false){
-            avatar.setImageResource(this.logo2);
-        }
-
-        else{
-            avatar.setImageResource(this.logo1);
-        }
+        avatar.setImageResource(this.logo2);
 
         return customView;
     }
