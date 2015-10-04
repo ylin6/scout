@@ -11,11 +11,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -43,8 +47,28 @@ public class ListActivity extends AppCompatActivity {
 
         //
         Button startScoutingButton = (Button) findViewById(R.id.startScoutButton);
-
-
+        Switch liveSwitch = (Switch) findViewById(R.id.liveswitch);
+        liveSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    ParseUser user = ParseUser.getCurrentUser();
+                    user.put("live", true);
+                    user.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Toast.makeText(getApplicationContext(), "Failed to update status",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Broadcasting location",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public void goToCamera(View view){
