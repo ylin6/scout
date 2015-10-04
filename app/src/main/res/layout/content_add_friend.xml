@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@color/colorPrimaryDark"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_add_friend"
+    tools:context="in.yuchengl.scoutui.AddFriendActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:hint = "Username"
+            android:textSize="20sp"
+            android:textColorHint="@color/colorGrey"
+            android:layout_marginBottom="40dp"
+            android:id="@+id/username"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/colorPrimary"
+            android:text="Add Friend"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:id="@+id/addFriendButton"
+            android:onClick="AddNewFriend"/>
+    </LinearLayout>
+
+</LinearLayout>
