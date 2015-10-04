@@ -97,6 +97,11 @@ public class ListActivity extends AppCompatActivity {
         startActivity(startScouting);
     }
 
+    public void goToAddFriend(){
+        Intent addNewFriend = new Intent(this, AddFriendActivity.class);
+        startActivity(addNewFriend);
+    }
+
     public void logout(){
       //TODO Logout
         ParseUser.logOut();
@@ -127,6 +132,11 @@ public class ListActivity extends AppCompatActivity {
         else if(id == R.id.action_logout){
             logout();
             return true;
+        }
+
+        else if(id == R.id.action_addfriend){
+            Intent addNewFriend = new Intent(this, AddFriendActivity.class);
+            startActivity(addNewFriend);
         }
 
         return super.onOptionsItemSelected(item);
