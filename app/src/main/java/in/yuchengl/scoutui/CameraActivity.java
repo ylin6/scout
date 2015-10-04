@@ -8,10 +8,12 @@ import android.hardware.Camera;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
 public class CameraActivity extends Activity {
+    private MyGLSurfaceView mGLView;
     private Camera mCamera;
     private SurfaceView mPreview;
     private SurfaceHolder mHolder;
@@ -31,6 +33,8 @@ public class CameraActivity extends Activity {
         mHolder = mPreview.getHolder();
         mHolder.addCallback(previewSurfaceCallback);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        mGLView = (MyGLSurfaceView) findViewById(R.id.overlay);
     }
 
     @Override

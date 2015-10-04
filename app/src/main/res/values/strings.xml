@@ -6,4 +6,7 @@
     <string name="title_activity_list">ListActivity</string>
     <string name="title_activity_main_friends">MainFriendsActivity</string>
     <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_test">TestActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

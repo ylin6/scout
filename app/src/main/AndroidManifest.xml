@@ -6,9 +6,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
     <uses-feature android:name="android.hardware.camera.AutoFocus" />
-    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <application
         android:name=".Scout"
@@ -39,7 +44,7 @@
         <activity
             android:name=".CameraActivity"
             android:label="@string/title_activity_camera"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 
