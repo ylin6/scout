@@ -33,10 +33,6 @@ public class LoginActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final Button signup = (Button) findViewById(R.id.signUp);
-        final Button login = (Button) findViewById(R.id.login);
-        EditText username = (EditText) findViewById(R.id.username);
-        EditText password = (EditText) findViewById(R.id.password);
     }
 
     public void newUser(View view){
