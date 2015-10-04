@@ -18,6 +18,7 @@ public class CameraActivity extends Activity {
     private SurfaceHolder mHolder;
     private int mCameraId;
     private boolean mInPreview;
+    private Scoutee[] mParty;
     public final String TAG = "SCOUT";
 
     @Override
