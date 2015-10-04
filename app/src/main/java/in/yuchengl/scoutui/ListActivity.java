@@ -52,6 +52,14 @@ public class ListActivity extends AppCompatActivity {
         startActivity(startScouting);
     }
 
+    public void logout(){
+      //TODO Logout
+        ParseUser.logOut();
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        Intent goToLogin = new Intent(this, LoginActivity.class);
+        startActivity(goToLogin);
+    };
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -68,6 +76,11 @@ public class ListActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        else if(id == R.id.action_logout){
+            logout();
             return true;
         }
 
