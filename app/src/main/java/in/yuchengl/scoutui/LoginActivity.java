@@ -1,5 +1,6 @@
 package in.yuchengl.scoutui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -27,18 +28,15 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        redirectIfLoggedIn(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final Button signup = (Button) findViewById(R.id.signUp);
         final Button login = (Button) findViewById(R.id.login);
         EditText username = (EditText) findViewById(R.id.username);
         EditText password = (EditText) findViewById(R.id.password);
-
-        // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
-
-        Parse.initialize(this, "ZFqxViHGMZC0FRXXu1QlQJF44lewIZ4VBLDAPlZ5",
-                "3cmt5L56qE1NpMcqzZInRGNhIhNcy1feJb9cKIdx");
     }
 
     public void newUser(View view){
@@ -67,6 +65,15 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void redirectIfLoggedIn(Context context) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser == null) {
+        } else {
+            Intent redirectIntent = new Intent(context, ListActivity.class);
+            context.startActivity(redirectIntent);
+        }
     }
 
 }

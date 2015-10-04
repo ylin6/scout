@@ -1,6 +1,7 @@
 package in.yuchengl.scoutui;
 
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -54,6 +55,7 @@ public class ScoutTriangle {
     }
 
     public void draw(){
+        //Log.d("renderer", "drawing");
         GLES20.glUseProgram(shaderProgram);
         int positionAttrib = GLES20.glGetAttribLocation(shaderProgram, "vPosition");
         GLES20.glEnableVertexAttribArray(positionAttrib);
