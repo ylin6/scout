@@ -1,8 +1,12 @@
 package in.yuchengl.scoutui;
 
 import android.app.Application;
+import android.widget.Toast;
 
 import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class Scout extends Application {
     @Override

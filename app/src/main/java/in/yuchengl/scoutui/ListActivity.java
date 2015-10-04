@@ -17,7 +17,10 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -45,28 +48,46 @@ public class ListActivity extends AppCompatActivity {
         ListView friendsList = (ListView) findViewById(R.id.friendList);
         friendsList.setAdapter(friendListAdapter);
 
-        //
         Button startScoutingButton = (Button) findViewById(R.id.startScoutButton);
-        Switch liveSwitch = (Switch) findViewById(R.id.liveswitch);
+
+        /* initialize switch */
+        final Switch liveSwitch = (Switch) findViewById(R.id.liveswitch);
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        query.getInBackground(ParseUser.getCurrentUser().getObjectId(),
+                new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if (e == null) {
+                    liveSwitch.setChecked(parseObject.getBoolean("live"));
+                } else {
+                    Toast.makeText(getApplicationContext(), e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         liveSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                ParseUser user = ParseUser.getCurrentUser();
                 if (isChecked) {
-                    ParseUser user = ParseUser.getCurrentUser();
                     user.put("live", true);
-                    user.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e != null) {
-                                Toast.makeText(getApplicationContext(), "Failed to update status",
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Broadcasting location",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                } else {
+                    user.put("live", false);
                 }
+                user.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            Toast.makeText(getApplicationContext(), "Failed to update status",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Updated broadcast status",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
     }
@@ -109,6 +130,17 @@ public class ListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ParseUser user = ParseUser.getCurrentUser();
+        user.put("live", false);
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {}
+        });
     }
 
     private ParseUser redirectIfNotLoggedIn(Context context) {
