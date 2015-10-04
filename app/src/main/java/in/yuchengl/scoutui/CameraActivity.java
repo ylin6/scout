@@ -12,7 +12,6 @@ import android.view.SurfaceView;
 import java.util.List;
 
 public class CameraActivity extends Activity {
-    private GLSurfaceView mScoutSurfaceView;
     private Camera mCamera;
     private SurfaceView mPreview;
     private SurfaceHolder mHolder;
@@ -32,9 +31,6 @@ public class CameraActivity extends Activity {
         mHolder = mPreview.getHolder();
         mHolder.addCallback(previewSurfaceCallback);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
-        /* Initialize overlay surface view */
-        mScoutSurfaceView = (GLSurfaceView) findViewById(R.id.scoutSurfaceView);
     }
 
     @Override

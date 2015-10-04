@@ -10,10 +10,4 @@
         android:layout_height="fill_parent">
     </SurfaceView>
 
-    <in.yuchengl.scoutui.ScoutGLSurfaceView
-        android:id="@+id/scoutSurfaceView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-    </in.yuchengl.scoutui.ScoutGLSurfaceView>
-
 </RelativeLayout>
