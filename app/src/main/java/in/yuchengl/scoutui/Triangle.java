@@ -18,10 +18,32 @@ public class Triangle {
             0.2f, 0.2f, 0.0f  // top right
     };
 
+    private final String vertexShaderCode =
+            "attribute vec4 vPosition;" +
+                    "uniform mat4 uModelViewProjectionMatrix;" +
+                    "void main() {" +
+                    "  gl_Position = vPosition * uModelViewProjectionMatrix;" +
+                    "}";
+
+    private final String fragmentShaderCode =
+            "precision mediump float;" +
+                    "uniform vec4 vColor;" +
+                    "void main() {" +
+                    "  gl_FragColor = vColor;" +
+                    "}";
+
     // Set color with red, green, blue and alpha (opacity) values
     float color[] = { 0.85f, 0.27f, 0.27f, 0.3f };
 
     private final int mProgram;
+
+    private int mPositionHandle;
+    private int mColorHandle;
+
+    private final int vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
+    private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
+
+    private int mModelViewProjectionMatrixHandle;
 
     public Triangle() {
         // initialize vertex byte buffer for shape coordinates
@@ -57,26 +79,7 @@ public class Triangle {
 
     }
 
-    private final String vertexShaderCode =
-            "attribute vec4 vPosition;" +
-                    "void main() {" +
-                    "  gl_Position = vPosition;" +
-                    "}";
-
-    private final String fragmentShaderCode =
-            "precision mediump float;" +
-                    "uniform vec4 vColor;" +
-                    "void main() {" +
-                    "  gl_FragColor = vColor;" +
-                    "}";
-
-    private int mPositionHandle;
-    private int mColorHandle;
-
-    private final int vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
-    private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
-
-    public void draw() {
+    public void draw(float [] ModelViewProjectionMatrix) {
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(mProgram);
 
@@ -97,10 +100,17 @@ public class Triangle {
         // Set color for drawing the triangle
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
+        // set projection matrix
+        mModelViewProjectionMatrixHandle = GLES20.glGetUniformLocation(mProgram,
+                "uModelViewProjectionMatrix");
+        GLES20.glUniformMatrix4fv(mModelViewProjectionMatrixHandle, 1, false,
+                ModelViewProjectionMatrix, 0);
+
         // Draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
+
     }
 }
