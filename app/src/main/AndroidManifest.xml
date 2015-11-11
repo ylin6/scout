@@ -46,6 +46,12 @@
             android:label="@string/title_activity_camera"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".AddFriendActivity"
+            android:label="@string/title_activity_add_friend"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
