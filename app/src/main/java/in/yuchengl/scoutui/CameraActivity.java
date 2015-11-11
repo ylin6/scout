@@ -1,18 +1,20 @@
 package in.yuchengl.scoutui;
 
 import android.app.Activity;
-import android.opengl.GLSurfaceView;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.hardware.Camera;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.RelativeLayout;
 
 import java.util.List;
 
-public class CameraActivity extends Activity {
+public class CameraActivity extends Activity implements SensorEventListener {
     private MyGLSurfaceView mGLView;
     private Camera mCamera;
     private SurfaceView mPreview;
@@ -20,6 +22,14 @@ public class CameraActivity extends Activity {
     private int mCameraId;
     private boolean mInPreview;
     public final String TAG = "SCOUT";
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private Sensor mMagneticField;
+    private float[] mRotationMatrix;
+    private float[] mInclinationMatrix;
+    private float[] mMatrixValues;
+    private float[] mGravityValues;
+    private float[] mGeomagneticValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +43,22 @@ public class CameraActivity extends Activity {
         mHolder = mPreview.getHolder();
         mHolder.addCallback(previewSurfaceCallback);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mMagneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         mGLView = (MyGLSurfaceView) findViewById(R.id.overlay);
+        mRotationMatrix = new float[9];
+        mInclinationMatrix = new float[9];
+        mMatrixValues = new float[3];
+        mGravityValues = new float[3];
+        mGeomagneticValues = new float[3];
+    }
+
+    @Override
+    public void onResume() {
+        mSensorManager.registerListener(this, mAccelerometer, mSensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mMagneticField, mSensorManager.SENSOR_DELAY_NORMAL);
+        super.onResume();
     }
 
     @Override
@@ -43,6 +67,9 @@ public class CameraActivity extends Activity {
             mCamera.stopPreview();
         }
         mInPreview = false;
+        mSensorManager.unregisterListener(this, mAccelerometer);
+        mSensorManager.unregisterListener(this, mMagneticField);
+
         super.onPause();
     }
 
@@ -160,4 +187,27 @@ public class CameraActivity extends Activity {
         public void surfaceDestroyed(SurfaceHolder holder) {}
     };
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Log.d(TAG, "sensor was changed");
+        int i;
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+                for(i=0; i<3; i++) mGravityValues[i] = event.values[i];
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                for(i=0; i<3; i++) mGeomagneticValues[i] = event.values[i];
+                break;
+        }
+
+        if(mSensorManager.getRotationMatrix(mRotationMatrix, mInclinationMatrix, mGravityValues,
+                mGeomagneticValues)) {
+            mSensorManager.getOrientation(mRotationMatrix, mMatrixValues);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }
