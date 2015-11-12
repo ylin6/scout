@@ -206,6 +206,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
         }
 
         double degrees = Math.toDegrees(mMatrixValues[0]);
+        if(degrees < 0) degrees = 360 + degrees;
         mGLView.update((float)degrees);
     }
 
