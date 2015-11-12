@@ -15,10 +15,13 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private final float[] mRotationMatrix = new float[16];
+    private final float mThreshold = 3.0f;
     private float mAzimuth = 0.0f;
 
+
     public void update(float value) {
-        mAzimuth = value;
+        if (Math.abs(value - mAzimuth) > mThreshold)
+            mAzimuth = value;
     }
 
     public void onDrawFrame(GL10 unused) {
