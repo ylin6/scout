@@ -15,7 +15,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private final float[] mRotationMatrix = new float[16];
-    private final float mThreshold = 3.0f;
+    private final float mThreshold = 5.0f;
     private float mAzimuth = 0.0f;
 
 
@@ -26,8 +26,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     public void onDrawFrame(GL10 unused) {
         float[] scratch = new float[16];
-        long time = SystemClock.uptimeMillis() % 4000L;
-        //float angle = 0.09f * (int)time;
 
         // Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);

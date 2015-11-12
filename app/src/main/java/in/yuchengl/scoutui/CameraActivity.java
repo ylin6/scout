@@ -189,7 +189,6 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.d(TAG, "sensor was changed");
         int i;
         switch (event.sensor.getType()) {
             case Sensor.TYPE_ACCELEROMETER:
@@ -203,11 +202,11 @@ public class CameraActivity extends Activity implements SensorEventListener {
         if(mSensorManager.getRotationMatrix(mRotationMatrix, mInclinationMatrix, mGravityValues,
                 mGeomagneticValues)) {
             mSensorManager.getOrientation(mRotationMatrix, mMatrixValues);
-        }
 
-        double degrees = Math.toDegrees(mMatrixValues[0]);
-        if(degrees < 0) degrees = 360 + degrees;
-        mGLView.update((float)degrees);
+            double degrees = Math.toDegrees(mMatrixValues[0]);
+            if(degrees < 0) degrees = 360 + degrees;
+            mGLView.update((float) degrees);
+        }
     }
 
     @Override
