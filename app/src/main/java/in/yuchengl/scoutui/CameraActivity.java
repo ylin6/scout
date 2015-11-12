@@ -15,8 +15,8 @@ import android.view.SurfaceView;
 import java.util.List;
 
 public class CameraActivity extends Activity implements SensorEventListener {
-    private MyGLSurfaceView mGLView;
     private Camera mCamera;
+    private MyGLSurfaceView mGLView;
     private SurfaceView mPreview;
     private SurfaceHolder mHolder;
     private int mCameraId;
@@ -46,12 +46,12 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        mGLView = (MyGLSurfaceView) findViewById(R.id.overlay);
         mRotationMatrix = new float[9];
         mInclinationMatrix = new float[9];
         mMatrixValues = new float[3];
         mGravityValues = new float[3];
         mGeomagneticValues = new float[3];
+        mGLView = (MyGLSurfaceView)findViewById(R.id.overlay);
     }
 
     @Override
@@ -204,6 +204,9 @@ public class CameraActivity extends Activity implements SensorEventListener {
                 mGeomagneticValues)) {
             mSensorManager.getOrientation(mRotationMatrix, mMatrixValues);
         }
+
+        double degrees = Math.toDegrees(mMatrixValues[0]);
+        mGLView.update((float)degrees);
     }
 
     @Override

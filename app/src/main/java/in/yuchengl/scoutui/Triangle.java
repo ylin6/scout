@@ -12,17 +12,23 @@ public class Triangle {
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
-    static float triangleCoords[] = {   // in counterclockwise order:
+    /*static float triangleCoords[] = {   // in counterclockwise order:
             -0.2f, 0.2f, 0.0f,  // top left
-            0.0f,  -0.1f, 0.0f, // bottom
+            0.0f,  -0.34641016151f, 0.0f, // bottom
             0.2f, 0.2f, 0.0f  // top right
+    };*/
+
+    static float triangleCoords[] = {   // in counterclockwise order
+            -0.2f, -0.2f, 0.0f,  // top left
+            0.2f, -0.2f, 0.0f,  // top right
+            0.0f,  0.34641016151f, 0.0f
     };
 
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
                     "uniform mat4 uModelViewProjectionMatrix;" +
                     "void main() {" +
-                    "  gl_Position = vPosition * uModelViewProjectionMatrix;" +
+                    "  gl_Position = uModelViewProjectionMatrix * vPosition;" +
                     "}";
 
     private final String fragmentShaderCode =

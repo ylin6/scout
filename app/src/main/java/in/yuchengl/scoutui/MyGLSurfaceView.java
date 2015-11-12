@@ -13,7 +13,7 @@ class MyGLSurfaceView extends GLSurfaceView {
     private final MyGLRenderer mRenderer;
 
     public MyGLSurfaceView(Context context, AttributeSet attributeSet){
-        super(context);
+        super(context, attributeSet);
 
         // Create an OpenGL ES 2.0 context
         setEGLContextClientVersion(2);
@@ -25,5 +25,9 @@ class MyGLSurfaceView extends GLSurfaceView {
 
         // Set the Renderer for drawing on the GLSurfaceView
         setRenderer(mRenderer);
+    }
+
+    public void update(float value) {
+        mRenderer.update(value);
     }
 }
