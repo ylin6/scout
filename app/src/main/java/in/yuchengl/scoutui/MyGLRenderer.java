@@ -16,12 +16,16 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final float[] mViewMatrix = new float[16];
     private final float[] mRotationMatrix = new float[16];
     private final float mThreshold = 5.0f;
-    private float mAzimuth = 0.0f;
+    private float mDirection = 0.0f;
+    private float mPitch = 0.0f;
+    private float mRoll = 0.0f;
 
 
-    public void update(float value) {
-        if (Math.abs(value - mAzimuth) > mThreshold)
-            mAzimuth = value;
+    public void update(float pitch, float direction) {
+        if (Math.abs(direction - mDirection) > mThreshold)
+            mDirection = direction;
+
+        mPitch = pitch;
     }
 
     public void onDrawFrame(GL10 unused) {
@@ -31,10 +35,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0f);
         Matrix.multiplyMM(mModelViewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-        Matrix.setRotateM(mRotationMatrix, 0, -mAzimuth, 0, 0.0f, 1.0f);
+        Matrix.setRotateM(mRotationMatrix, 0, -mDirection, 0.0f, 0.0f, 1.0f);
+        //Matrix.rotateM(mRotationMatrix, 0, mPitch, 1.0f, 0.0f, 0.0f);
         Matrix.multiplyMM(scratch, 0, mModelViewProjectionMatrix, 0, mRotationMatrix, 0);
 
-        Log.d("GL_VIEW", "azimuth: " + mAzimuth);
         mTriangle.draw(scratch);
     }
 
@@ -48,7 +52,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
 
-        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 2, 7);
     }
 
     public static int loadShader(int type, String shaderCode){

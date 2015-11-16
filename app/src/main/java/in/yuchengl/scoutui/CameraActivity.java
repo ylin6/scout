@@ -187,6 +187,19 @@ public class CameraActivity extends Activity implements SensorEventListener {
         public void surfaceDestroyed(SurfaceHolder holder) {}
     };
 
+    private double getDirection(double azimuth, double startLat, double startLong, double destLat,
+                              double destLong) {
+        double dLong = destLong - startLong;
+        double y = Math.sin(dLong) * Math.cos(destLat);
+        double x = Math.cos(startLat) * Math.sin(destLat) - Math.sin(startLat) * Math.cos(destLat) *
+                Math.cos(dLong);
+        double bearing = Math.atan2(y, x);
+
+        bearing = Math.toDegrees(bearing);
+        bearing = (bearing + 360) % 360;
+        return bearing + azimuth;
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         int i;
@@ -203,9 +216,20 @@ public class CameraActivity extends Activity implements SensorEventListener {
                 mGeomagneticValues)) {
             mSensorManager.getOrientation(mRotationMatrix, mMatrixValues);
 
-            double degrees = Math.toDegrees(mMatrixValues[0]);
-            if(degrees < 0) degrees = 360 + degrees;
-            mGLView.update((float) degrees);
+            double azimuth = Math.toDegrees(mMatrixValues[0]);
+            if(azimuth < 0) azimuth = 360 + azimuth;
+
+            double pitch = Math.toDegrees(mMatrixValues[1]);
+
+            //Log.d("GL_VIEW", "pitch: " + pitch);
+            //if(pitch > 0) pitch = 0.0f;
+            //pitch = pitch / 1.125f;
+
+            double mylat = 41.703815;
+            double mylong = -86.233998;
+            double direction = getDirection(azimuth, 41.703815, -86.233998, 41.703354, -86.238971);
+
+            mGLView.update((float) pitch, (float) direction);
         }
     }
 

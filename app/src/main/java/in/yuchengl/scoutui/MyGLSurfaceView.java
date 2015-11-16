@@ -27,7 +27,7 @@ class MyGLSurfaceView extends GLSurfaceView {
         setRenderer(mRenderer);
     }
 
-    public void update(float value) {
-        mRenderer.update(value);
+    public void update(float pitch, float direction) {
+        mRenderer.update(pitch, direction);
     }
 }
