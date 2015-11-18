@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListAdapter;
@@ -47,8 +48,6 @@ public class ListActivity extends AppCompatActivity {
 
         ListView friendsList = (ListView) findViewById(R.id.friendList);
         friendsList.setAdapter(friendListAdapter);
-
-        Button startScoutingButton = (Button) findViewById(R.id.startScoutButton);
 
         /* initialize switch */
         final Switch liveSwitch = (Switch) findViewById(R.id.liveswitch);
@@ -90,12 +89,27 @@ public class ListActivity extends AppCompatActivity {
                 });
             }
         });
+        registerListClickCallback();
     }
 
+    public void registerListClickCallback(){
+        ListView list = (ListView) findViewById(R.id.friendList);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                int LocationData = 7;
+                Intent startScouting = new Intent(ListActivity.this, CameraActivity.class);
+                startScouting.putExtra("LocationData", LocationData);
+                startActivity(startScouting);
+            }
+        });
+    }
+
+    /*
     public void goToCamera(View view){
         Intent startScouting = new Intent(this, CameraActivity.class);
         startActivity(startScouting);
-    }
+    }*/
 
     public void goToAddFriend(){
         Intent addNewFriend = new Intent(this, AddFriendActivity.class);
