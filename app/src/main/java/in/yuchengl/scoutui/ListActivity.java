@@ -2,6 +2,8 @@ package in.yuchengl.scoutui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -24,7 +26,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity implements LocationListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,4 +168,23 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }
