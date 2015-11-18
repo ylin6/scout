@@ -11,9 +11,23 @@ import android.util.Log;
 import com.parse.Parse;
 
 public class Scout extends Application {
-    public LocationManager mLocationManager;
-    public LocationListener mLocationListener;
-    public Location mLocation;
+    private LocationManager mLocationManager;
+    private LocationListener mLocationListener;
+    private Location mLocation;
+    public boolean mBroadcasting = false;
+
+    public Location getLocation() {
+        return mLocation;
+    }
+
+    public void startListening() {
+        mLocationManager.requestLocationUpdates(mLocationManager.NETWORK_PROVIDER, 500, 0,
+                mLocationListener);
+    }
+
+    public void stopListening() {
+        mLocationManager.removeUpdates(mLocationListener);
+    }
 
     @Override
     public void onCreate() {
@@ -33,19 +47,18 @@ public class Scout extends Application {
                 mLocation = location;
                 Log.d("Application", "Lat: " + location.getLatitude() + " Long: " +
                         location.getLongitude());
+
+                if (mBroadcasting) {
+                    // send data to parse
+                }
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
             @Override
-            public void onProviderEnabled(String provider) {
-            }
-
+            public void onProviderEnabled(String provider) {}
             @Override
-            public void onProviderDisabled(String provider) {
-            }
+            public void onProviderDisabled(String provider) {}
         };
     }
 }

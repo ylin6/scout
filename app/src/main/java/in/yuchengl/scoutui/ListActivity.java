@@ -107,12 +107,6 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         });
     }
 
-    /*
-    public void goToCamera(View view){
-        Intent startScouting = new Intent(this, CameraActivity.class);
-        startActivity(startScouting);
-    }*/
-
     public void goToAddFriend(){
         Intent addNewFriend = new Intent(this, AddFriendActivity.class);
         startActivity(addNewFriend);
