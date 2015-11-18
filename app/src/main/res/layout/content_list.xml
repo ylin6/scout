@@ -39,18 +39,7 @@
             android:layout_height="match_parent"
             android:divider="@color/colorGrey"
             android:dividerHeight="2px"
-            android:paddingBottom="80dp"
             android:id="@+id/friendList"
             />
     </LinearLayout>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/colorPrimary"
-        android:text="Start Scouting"
-        android:textColor="@color/colorWhite"
-        android:textSize="18sp"
-        android:layout_alignParentBottom="true"
-        android:onClick="goToCamera"
-        android:id="@+id/startScoutButton"/>
 </RelativeLayout>
