@@ -8,7 +8,12 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.parse.GetCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 public class Scout extends Application {
     private LocationManager mLocationManager;
@@ -49,7 +54,16 @@ public class Scout extends Application {
                         location.getLongitude());
 
                 if (mBroadcasting) {
-                    // send data to parse
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+                    query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseObject>() {
+                        @Override
+                        public void done(ParseObject parseObject, ParseException e) {
+                            if (e == null) {
+                                parseObject.put("latitude", mLocation.getLatitude());
+                                parseObject.put("longitude", mLocation.getLongitude());
+                            }
+                        }
+                    });
                 }
             }
 
