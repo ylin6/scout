@@ -5,14 +5,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.hardware.Camera;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import java.util.List;
+import java.util.ServiceConfigurationError;
 
 public class CameraActivity extends Activity implements SensorEventListener {
     private Camera mCamera;
@@ -35,6 +38,11 @@ public class CameraActivity extends Activity implements SensorEventListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        Toast.makeText(getApplicationContext(), "Waiting for location data",
+                Toast.LENGTH_SHORT).show();
+
+        ((Scout) getApplication()).startListening();
         openCamera();
 
         /* Set up surface view for camera feed */
@@ -51,11 +59,12 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mMatrixValues = new float[3];
         mGravityValues = new float[3];
         mGeomagneticValues = new float[3];
-        mGLView = (MyGLSurfaceView)findViewById(R.id.overlay);
+        mGLView = (MyGLSurfaceView) findViewById(R.id.overlay);
     }
 
     @Override
     public void onResume() {
+        ((Scout) getApplication()).startListening();
         mSensorManager.registerListener(this, mAccelerometer, mSensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mMagneticField, mSensorManager.SENSOR_DELAY_NORMAL);
         super.onResume();
@@ -67,6 +76,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
             mCamera.stopPreview();
         }
         mInPreview = false;
+        ((Scout) getApplication()).stopListening();
         mSensorManager.unregisterListener(this, mAccelerometer);
         mSensorManager.unregisterListener(this, mMagneticField);
 
@@ -76,12 +86,14 @@ public class CameraActivity extends Activity implements SensorEventListener {
     @Override
     public void onStop() {
         mCamera.release();
+        ((Scout) getApplication()).stopListening();
         super.onStop();
     }
 
     @Override
     public void onRestart() {
         super.onRestart();
+        ((Scout) getApplication()).startListening();
         openCamera();
     }
 
@@ -92,8 +104,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
             if (size.width <= width && size.height <= height) {
                 if (result == null) {
                     result = size;
-                }
-                else {
+                } else {
                     int resultArea = result.width * result.height;
                     int newArea = size.width * size.height;
 
@@ -104,7 +115,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
             }
         }
 
-        return(result);
+        return (result);
     }
 
     private void openCamera() {
@@ -134,10 +145,18 @@ public class CameraActivity extends Activity implements SensorEventListener {
                 .getRotation();
         int degrees = 0;
         switch (rotation) {
-            case Surface.ROTATION_0: degrees = 0; break;
-            case Surface.ROTATION_90: degrees = 90; break;
-            case Surface.ROTATION_180: degrees = 180; break;
-            case Surface.ROTATION_270: degrees = 270; break;
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
         }
 
         int result;
@@ -155,7 +174,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
         public void surfaceCreated(SurfaceHolder holder) {
             try {
                 mCamera.setPreviewDisplay(holder);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
         }
@@ -177,18 +196,20 @@ public class CameraActivity extends Activity implements SensorEventListener {
                     mCamera.setParameters(params);
                     mCamera.autoFocus(new Camera.AutoFocusCallback() {
                         @Override
-                        public void onAutoFocus(boolean success, Camera camera) {}
+                        public void onAutoFocus(boolean success, Camera camera) {
+                        }
                     });
                 }
             }
         }
 
         @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {}
+        public void surfaceDestroyed(SurfaceHolder holder) {
+        }
     };
 
     private double getDirection(double azimuth, double startLat, double startLong, double destLat,
-                              double destLong) {
+                                double destLong) {
         double dLong = destLong - startLong;
         double y = Math.sin(dLong) * Math.cos(destLat);
         double x = Math.cos(startLat) * Math.sin(destLat) - Math.sin(startLat) * Math.cos(destLat) *
@@ -205,33 +226,37 @@ public class CameraActivity extends Activity implements SensorEventListener {
         int i;
         switch (event.sensor.getType()) {
             case Sensor.TYPE_ACCELEROMETER:
-                for(i=0; i<3; i++) mGravityValues[i] = event.values[i];
+                for (i = 0; i < 3; i++) mGravityValues[i] = event.values[i];
                 break;
             case Sensor.TYPE_MAGNETIC_FIELD:
-                for(i=0; i<3; i++) mGeomagneticValues[i] = event.values[i];
+                for (i = 0; i < 3; i++) mGeomagneticValues[i] = event.values[i];
                 break;
         }
 
-        if(mSensorManager.getRotationMatrix(mRotationMatrix, mInclinationMatrix, mGravityValues,
+        if (mSensorManager.getRotationMatrix(mRotationMatrix, mInclinationMatrix, mGravityValues,
                 mGeomagneticValues)) {
             mSensorManager.getOrientation(mRotationMatrix, mMatrixValues);
 
             double azimuth = Math.toDegrees(mMatrixValues[0]);
-            if(azimuth < 0) azimuth = 360 + azimuth;
+            if (azimuth < 0) azimuth = 360 + azimuth;
 
             double pitch = Math.toDegrees(mMatrixValues[1]);
 
-            //Log.d("GL_VIEW", "pitch: " + pitch);
-            //if(pitch > 0) pitch = 0.0f;
-            //pitch = pitch / 1.125f;
-
-            double mylat = 41.703815;
-            double mylong = -86.233998;
-            double direction = getDirection(azimuth, 41.703815, -86.233998, 41.703354, -86.238971);
-
-            mGLView.update((float) pitch, (float) direction);
+            Location myLoc = ((Scout) getApplication()).getLocation();
+            if (myLoc != null) {
+                Log.d("loc", "CamLat: " + myLoc.getLatitude() + " CamLong: " +
+                        myLoc.getLongitude());
+                double direction = getDirection(azimuth, myLoc.getLatitude(), myLoc.getLongitude(),
+                        41.703027, -86.239073);
+/*
+                double direction = getDirection(azimuth, 41.703682, -86.233733,
+                        41.703027, -86.239073);
+*/
+                mGLView.update((float) pitch, (float) direction);
+            }
         }
     }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

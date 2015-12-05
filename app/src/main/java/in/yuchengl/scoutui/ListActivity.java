@@ -39,12 +39,12 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         redirectIfNotLoggedIn(this);
 
         // Dummy DB
-        ListItem user1 = new ListItem("msprigg", "image.png", true);
-        ListItem user2 = new ListItem("gmartinez", "image2.png", true);
-        ListItem user3 = new ListItem("ylin6", "image3.png", true);
-        ListItem user4 = new ListItem("Mosise","image4.png", true);
-        ListItem user5 = new ListItem("Mosise","image4.png", true);
-        ListItem[] friends = {user1, user2, user3, user4, user5, user5, user1, user4, user3, user2, user3, user4, user1 };
+        ListItem user1 = new ListItem("Dome", "image.png", true);
+        ListItem user2 = new ListItem("Marshall Sprigg", "image2.png", true);
+        ListItem user3 = new ListItem("Yucheng Lin", "image3.png", true);
+        ListItem user4 = new ListItem("Joe Montana","image4.png", true);
+        ListItem user5 = new ListItem("Lou Holtz","image4.png", true);
+        ListItem[] friends = {user1, user2, user3, user4, user5};
 
         ListAdapter friendListAdapter = new CustomListAdapter(this, friends);
 
@@ -61,6 +61,16 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
             public void done(ParseObject parseObject, ParseException e) {
                 if (e == null) {
                     liveSwitch.setChecked(parseObject.getBoolean("live"));
+                    if (parseObject.getBoolean("live")) {
+                        Toast.makeText(getApplicationContext(), "Broadcast on",
+                                Toast.LENGTH_SHORT).show();
+                        ((Scout) getApplication()).mBroadcasting = true;
+                        ((Scout) getApplication()).startListening();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Broadcast off",
+                                Toast.LENGTH_SHORT).show();
+                        ((Scout) getApplication()).mBroadcasting = false;
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(), e.getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -74,8 +84,12 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                 ParseUser user = ParseUser.getCurrentUser();
                 if (isChecked) {
                     user.put("live", true);
+                    ((Scout) getApplication()).mBroadcasting = true;
+                    ((Scout) getApplication()).startListening();
                 } else {
                     user.put("live", false);
+                    ((Scout) getApplication()).mBroadcasting = false;
+                    ((Scout) getApplication()).stopListening();
                 }
                 user.saveInBackground(new SaveCallback() {
                     @Override
