@@ -13,13 +13,13 @@ import android.widget.TextView;
 /**
  * Created by Yucheng on 12/5/15.
  */
-public class CustomListAdapter2 extends ArrayAdapter<ListItem> {
+public class CustomListAdapter2 extends ArrayAdapter<FriendsListItem> {
 
     private Context c;
     private int logo1;
     private int logo2;
 
-    CustomListAdapter2(Context context, ListItem[] users) {
+    CustomListAdapter2(Context context, FriendsListItem[] users) {
         super(context, R.layout.addfriends_list_item_layout, users);
         this.c = context;
         this.logo1 = this.c.getResources().getIdentifier("scoutlogo", "drawable", "in.yuchengl.scoutui");
@@ -31,7 +31,7 @@ public class CustomListAdapter2 extends ArrayAdapter<ListItem> {
         LayoutInflater listInflater = LayoutInflater.from(getContext());
         View customView = listInflater.inflate(R.layout.addfriends_list_item_layout, parent, false);
 
-        final String userArrayItemName = getItem(position).mName;
+        final String userArrayItemName = getItem(position).getName();
         /*
         String userArrayItemImage = getItem(position).mImage;
         Boolean userArrayItemStatus = getItem(position).mLive;*/

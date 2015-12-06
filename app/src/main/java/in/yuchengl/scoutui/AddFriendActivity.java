@@ -34,11 +34,11 @@ public class AddFriendActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ListItem user1 = new ListItem("HotMilf91", "image.png", true);
-        ListItem user2 = new ListItem("PeterPuffer", "image2.png", true);
-        ListItem user3 = new ListItem("xX_Flame_Xx", "image2.png", true);
+        FriendsListItem user1 = new FriendsListItem("HotMilf91", "image.png", true);
+        FriendsListItem user2 = new FriendsListItem("PeterPuffer", "image2.png", true);
+        FriendsListItem user3 = new FriendsListItem("xX_Flame_Xx", "image2.png", true);
 
-        ListItem[] friends = {user1, user2, user3};
+        FriendsListItem[] friends = {user1, user2, user3};
 
         ListAdapter friendListAdapter = new CustomListAdapter2(this, friends);
 
