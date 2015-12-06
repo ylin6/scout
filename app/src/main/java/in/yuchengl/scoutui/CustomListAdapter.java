@@ -45,5 +45,6 @@ class CustomListAdapter extends ArrayAdapter<FriendsListItem> {
         avatar.setImageResource(mLogo2);
 
         return customView;
+
     }
 }
