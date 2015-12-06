@@ -16,10 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,32 +56,50 @@ public class AddFriendActivity extends AppCompatActivity {
 
         final ParseUser currentUser = ParseUser.getCurrentUser();
         if(currentUser.getUsername() != add_friend_username) {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
-            query.whereEqualTo("username", add_friend_username);
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("FriendRequest");
+            query.whereEqualTo("requestFrom", currentUser.getUsername());
+            query.whereEqualTo("requestTo", add_friend_username);
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> list, ParseException e) {
-                    if (e == null) {
-                        //TODO
-                        ParseObject user = list.get(0);
-                        Log.d("hello", user.getString("username"));
-                        user.addUnique("friendRequests", "Me");
-                        user.saveInBackground();
-
-                        CharSequence text = "Request Sent";
+                    if (e == null){
                         Context context = getApplicationContext();
-                        Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-                    } else {
-                        Context context = getApplicationContext();
-                        Toast toast = Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT);
+                        String message = "Request has already been made. Status is : " + list.get(0).getString("status");
+                        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
                         toast.show();
+                    }
+
+                    else{
+                        Log.d("Application", e.getMessage());
+                        ParseObject friendRequest = new ParseObject("FriendRequest");
+                        friendRequest.put("requestFrom", currentUser.getUsername());
+                        friendRequest.put("requestTo", add_friend_username);
+                        friendRequest.put("status", "pending");
+                        friendRequest.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if(e == null){
+                                    Context context = getApplicationContext();
+                                    Toast toast = Toast.makeText(context, "Request Sent", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+
+                                else{
+                                    Context context = getApplicationContext();
+                                    Toast toast = Toast.makeText(context, "Request Failed", Toast.LENGTH_SHORT);
+                                    Log.d("Application", e.getMessage());
+                                    toast.show();
+                                }
+                            }
+                        });
                     }
                 }
             });
+
         }
         else{
             Context context = getApplicationContext();
-            CharSequence text = "You Can Add Yourself!";
+            CharSequence text = "You Can't Add Yourself!";
             Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
             toast.show();
         }
