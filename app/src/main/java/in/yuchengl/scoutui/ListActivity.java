@@ -127,6 +127,8 @@ public class ListActivity extends AppCompatActivity {
     private void updateFriendsList() {
         List<String> friendsList = ParseUser.getCurrentUser().getList("Friends");
 
+        if (friendsList == null) return;
+        
         int size = friendsList.size();
         for (int i = 0; i < size; i++) {
             ParseQuery<ParseObject> friendQuery = ParseQuery.getQuery("_User");
