@@ -41,9 +41,11 @@ class CustomListAdapter extends ArrayAdapter<ListItem> {
         ImageView avatar = (ImageView) customView.findViewById(R.id.avi);
 
 
+
         userName.setText(userArrayItemName);
         avatar.setImageResource(this.logo2);
 
         return customView;
+
     }
 }

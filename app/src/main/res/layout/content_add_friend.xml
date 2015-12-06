@@ -16,23 +16,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADD FRIENDS"
+            android:textSize="30sp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="top"
+            android:textColor="@color/colorPrimary"
+            android:textAlignment="center"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="110dp"
             android:hint = "Username"
             android:textSize="20sp"
+            android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorGrey"
             android:layout_marginBottom="40dp"
-            android:id="@+id/username"/>
+            android:id="@+id/add_friend_username"/>
         <Button
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="70dp"
             android:background="@color/colorPrimary"
-            android:text="Add Friend"
+            android:text="Add"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             android:id="@+id/addFriendButton"
             android:onClick="AddNewFriend"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PENDING FRIEND REQUESTS"
+            android:textSize="15sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="10dp"
+            android:textAlignment="center"/>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/colorGrey"
+            android:dividerHeight="2px"
+            android:id="@+id/pendingFriendList"
+            />
     </LinearLayout>
 
 </LinearLayout>

@@ -16,12 +16,35 @@ public class Triangle {
             -0.2f, 0.2f, 0.0f,  // top left
             0.0f,  -0.34641016151f, 0.0f, // bottom
             0.2f, 0.2f, 0.0f  // top right
-    };*/
+    };
 
     static float triangleCoords[] = {   // in counterclockwise order
             -0.2f, -0.2f, 0.0f,  // top left
             0.2f, -0.2f, 0.0f,  // top right
             0.0f,  0.34641016151f, 0.0f
+    };*/
+
+
+    static float triangleCoords[] = {
+            -0.75f, 0.5f, 0.0f,
+            0.75f, 0.5f, 0.0f,
+            0.75f, -0.5f, 0.0f,
+            -0.75f, 0.5f, 0.0f,
+            0.75f, -0.5f, 0.0f,
+            -0.75f, -0.5f,0.0f,
+            0.0f, 0.0f, 2.0f,
+            0.75f, 0.5f, 0.0f,
+            -0.75f, 0.5f, 0.0f,
+            0.0f, 0.0f, 2.0f,
+            -0.75f, 0.5f, 0.0f,
+            -0.75f, -0.5f, 0.0f,
+            0.0f, 0.0f, 2.0f,
+            -0.75f, 0.5f, 0.0f,
+            -0.75f, -0.5f, 0.0f,
+            0.0f, 0.0f, 2.0f,
+            -0.75f, 0.5f, 0.0f,
+            0.75f, -0.5f, 0.0f
+
     };
 
     private final String vertexShaderCode =
