@@ -14,6 +14,12 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import java.util.List;
 import java.util.ServiceConfigurationError;
 
@@ -33,6 +39,11 @@ public class CameraActivity extends Activity implements SensorEventListener {
     private float[] mMatrixValues;
     private float[] mGravityValues;
     private float[] mGeomagneticValues;
+    private String mFriendID;
+    private float mFriendLat;
+    private float mFriendLong;
+    private Thread mFriendThread;
+    private Boolean mAlive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +71,30 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mGravityValues = new float[3];
         mGeomagneticValues = new float[3];
         mGLView = (MyGLSurfaceView) findViewById(R.id.overlay);
+
+        /* Get friend's location */
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            mFriendID = null;
+        } else {
+            mFriendID = extras.getString("id");
+        }
+
+        mAlive = true;
+        mFriendThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while(mAlive) {
+                        sleep(5000);
+                        getFriendsLatLong();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        mFriendThread.start();
     }
 
     @Override
@@ -67,6 +102,10 @@ public class CameraActivity extends Activity implements SensorEventListener {
         ((Scout) getApplication()).startListening();
         mSensorManager.registerListener(this, mAccelerometer, mSensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mMagneticField, mSensorManager.SENSOR_DELAY_NORMAL);
+
+        mAlive = true;
+        mFriendThread.start();
+
         super.onResume();
     }
 
@@ -79,6 +118,8 @@ public class CameraActivity extends Activity implements SensorEventListener {
         ((Scout) getApplication()).stopListening();
         mSensorManager.unregisterListener(this, mAccelerometer);
         mSensorManager.unregisterListener(this, mMagneticField);
+
+        mAlive = false;
 
         super.onPause();
     }
@@ -207,6 +248,23 @@ public class CameraActivity extends Activity implements SensorEventListener {
         public void surfaceDestroyed(SurfaceHolder holder) {
         }
     };
+
+    private void getFriendsLatLong() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        query.whereEqualTo("objectId", mFriendID);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    mFriendLat = (float) object.getDouble("latitude");
+                    mFriendLong = (float) object.getDouble("longitude");
+                    Log.d("Friends", "Getting Friend data");
+                } else {
+                    Log.d("mFriendLocation", "Error: " + e.getMessage());
+                }
+            }
+        });
+    }
 
     private double getDirection(double azimuth, double startLat, double startLong, double destLat,
                                 double destLong) {
