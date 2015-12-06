@@ -26,7 +26,7 @@ public class Scout extends Application {
     }
 
     public void startListening() {
-        mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 400, 1,
+        mLocationManager.requestLocationUpdates(mLocationManager.NETWORK_PROVIDER, 400, 1,
                 mLocationListener);
     }
 

@@ -12,19 +12,22 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Button;
 
-class CustomListAdapter extends ArrayAdapter<ListItem> {
+import java.util.ArrayList;
 
-    private Context c;
-    private int logo1;
-    private int logo2;
+class CustomListAdapter extends ArrayAdapter<FriendsListItem> {
 
-  CustomListAdapter(Context context, ListItem[] users) {
-      super(context, R.layout.list_item_layout, users);
-      this.c = context;
-      this.logo1 = this.c.getResources().getIdentifier("scoutlogo", "drawable", "in.yuchengl.scoutui");
-      this.logo2 = this.c.getResources().getIdentifier("scoutlogo2", "drawable", "in.yuchengl.scoutui");
+    private Context mContext;
+    private int mLogo1;
+    private int mLogo2;
+
+  CustomListAdapter(Context context, ArrayList<FriendsListItem> friendsList) {
+      super(context, R.layout.list_item_layout, friendsList);
+      mContext = context;
+      mLogo1 = mContext.getResources().getIdentifier("scoutlogo",
+              "drawable", "in.yuchengl.scoutui");
+      mLogo2 = mContext.getResources().getIdentifier("scoutlogo2",
+              "drawable", "in.yuchengl.scoutui");
 
   }
 
@@ -33,16 +36,13 @@ class CustomListAdapter extends ArrayAdapter<ListItem> {
         LayoutInflater listInflater = LayoutInflater.from(getContext());
         View customView = listInflater.inflate(R.layout.list_item_layout, parent, false);
 
-        String userArrayItemName = getItem(position).mName;
-        String userArrayItemImage = getItem(position).mImage;
-        Boolean userArrayItemStatus = getItem(position).mLive;
+        String userArrayItemName = getItem(position).getName();
 
         TextView userName = (TextView) customView.findViewById(R.id.displayName);
         ImageView avatar = (ImageView) customView.findViewById(R.id.avi);
 
-
         userName.setText(userArrayItemName);
-        avatar.setImageResource(this.logo2);
+        avatar.setImageResource(mLogo2);
 
         return customView;
     }

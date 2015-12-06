@@ -2,23 +2,19 @@ package in.yuchengl.scoutui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
+import android.util.Log;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -27,7 +23,14 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-public class ListActivity extends AppCompatActivity implements LocationListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListActivity extends AppCompatActivity {
+    private ArrayList<FriendsListItem> mFriendsList;
+    private CustomListAdapter mFriendsListAdaper;
+    private int mCount;
+    private int mSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,23 +38,37 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         setContentView(R.layout.activity_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         redirectIfNotLoggedIn(this);
 
-        // Dummy DB
-        ListItem user1 = new ListItem("Dome", "image.png", true);
-        ListItem user2 = new ListItem("Marshall Sprigg", "image2.png", true);
-        ListItem user3 = new ListItem("Yucheng Lin", "image3.png", true);
-        ListItem user4 = new ListItem("Joe Montana","image4.png", true);
-        ListItem user5 = new ListItem("Lou Holtz","image4.png", true);
-        ListItem[] friends = {user1, user2, user3, user4, user5};
+        /* FRIENDS LIST INITIALIZATION */
+        mFriendsList = new ArrayList<>();
+        mFriendsListAdaper = new CustomListAdapter(this, mFriendsList);
 
-        ListAdapter friendListAdapter = new CustomListAdapter(this, friends);
+        ListView friendsListView = (ListView) findViewById(R.id.friendList);
+        friendsListView.setAdapter(mFriendsListAdaper);
+        updateFriendsList();
 
-        ListView friendsList = (ListView) findViewById(R.id.friendList);
-        friendsList.setAdapter(friendListAdapter);
+        friendsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String name = mFriendsListAdaper.getItem(position).getName();
+                String uid = mFriendsListAdaper.getItem(position).getId();
+                Boolean live = mFriendsListAdaper.getItem(position).getLive();
 
-        /* initialize switch */
+                if (!live) {
+                    Toast.makeText(getApplicationContext(), name + " is not live",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent scoutIntent = new Intent(ListActivity.this, CameraActivity.class);
+                scoutIntent.putExtra("name", name);
+                scoutIntent.putExtra("id", uid);
+                startActivity(scoutIntent);
+            }
+        });
+
+        /* BROADCAST SWITCH INITIALIZATION */
         final Switch liveSwitch = (Switch) findViewById(R.id.liveswitch);
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
@@ -105,34 +122,42 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                 });
             }
         });
-        registerListClickCallback();
     }
 
-    public void registerListClickCallback(){
-        ListView list = (ListView) findViewById(R.id.friendList);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                int LocationData = 7;
-                Intent startScouting = new Intent(ListActivity.this, CameraActivity.class);
-                startScouting.putExtra("LocationData", LocationData);
-                startActivity(startScouting);
-            }
-        });
+    private void updateFriendsList() {
+        List<String> friendsList = ParseUser.getCurrentUser().getList("Friends");
+
+        int size = friendsList.size();
+        for (int i = 0; i < size; i++) {
+            ParseQuery<ParseObject> friendQuery = ParseQuery.getQuery("_User");
+            friendQuery.getInBackground(friendsList.get(i), new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject parseObject, ParseException e) {
+                    if (e == null) {
+                        String name = parseObject.getString("username");
+                        String id = parseObject.getString("objectId");
+                        Boolean live = parseObject.getBoolean("live");
+                        FriendsListItem friend = new FriendsListItem(name, id, live);
+                        mFriendsList.add(friend);
+                        mFriendsListAdaper.notifyDataSetChanged();
+                    } else {
+                        Log.d("Application", "friend not found");
+                    }
+                }
+            });
+        }
     }
 
-    public void goToAddFriend(){
+    private void goToAddFriend(){
         Intent addNewFriend = new Intent(this, AddFriendActivity.class);
         startActivity(addNewFriend);
     }
 
-    public void logout(){
-      //TODO Logout
+    private void logout(){
         ParseUser.logOut();
-        ParseUser currentUser = ParseUser.getCurrentUser();
         Intent goToLogin = new Intent(this, LoginActivity.class);
         startActivity(goToLogin);
-    };
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -188,25 +213,5 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
             context.startActivity(redirectIntent);
             return null;
         }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 }
