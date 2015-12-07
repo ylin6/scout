@@ -29,8 +29,6 @@ import java.util.List;
 public class ListActivity extends AppCompatActivity {
     private ArrayList<FriendsListItem> mFriendsList;
     private CustomListAdapter mFriendsListAdaper;
-    private int mCount;
-    private int mSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +61,7 @@ public class ListActivity extends AppCompatActivity {
 
                 Intent scoutIntent = new Intent(ListActivity.this, CameraActivity.class);
                 scoutIntent.putExtra("name", name);
-                scoutIntent.putExtra("id", uid);
+                scoutIntent.putExtra("uid", uid);
                 startActivity(scoutIntent);
             }
         });
@@ -128,7 +126,7 @@ public class ListActivity extends AppCompatActivity {
         List<String> friendsList = ParseUser.getCurrentUser().getList("Friends");
 
         if (friendsList == null) return;
-        
+
         int size = friendsList.size();
         for (int i = 0; i < size; i++) {
             ParseQuery<ParseObject> friendQuery = ParseQuery.getQuery("_User");
@@ -137,7 +135,7 @@ public class ListActivity extends AppCompatActivity {
                 public void done(ParseObject parseObject, ParseException e) {
                     if (e == null) {
                         String name = parseObject.getString("username");
-                        String id = parseObject.getString("objectId");
+                        String id = parseObject.getObjectId();
                         Boolean live = parseObject.getBoolean("live");
                         FriendsListItem friend = new FriendsListItem(name, id, live);
                         mFriendsList.add(friend);
@@ -175,7 +173,6 @@ public class ListActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

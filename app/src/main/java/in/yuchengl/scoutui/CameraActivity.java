@@ -39,10 +39,9 @@ public class CameraActivity extends Activity implements SensorEventListener {
     private float[] mMatrixValues;
     private float[] mGravityValues;
     private float[] mGeomagneticValues;
-    private String mFriendID;
-    private float mFriendLat;
-    private float mFriendLong;
-    private Thread mFriendThread;
+    private String mFriendID = "";
+    private double mFriendLat = 0.0f;
+    private double mFriendLong = 0.0f;
     private Boolean mAlive;
 
     @Override
@@ -53,7 +52,6 @@ public class CameraActivity extends Activity implements SensorEventListener {
         Toast.makeText(getApplicationContext(), "Waiting for location data",
                 Toast.LENGTH_SHORT).show();
 
-        ((Scout) getApplication()).startListening();
         openCamera();
 
         /* Set up surface view for camera feed */
@@ -73,15 +71,21 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mGLView = (MyGLSurfaceView) findViewById(R.id.overlay);
 
         /* Get friend's location */
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
-            mFriendID = null;
-        } else {
-            mFriendID = extras.getString("id");
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras == null) {
+                mFriendID = "";
+            } else {
+                mFriendID = extras.getString("uid");
+            }
         }
 
         mAlive = true;
-        mFriendThread = new Thread() {
+        startTrackingThread();
+    }
+
+    private void startTrackingThread() {
+        Thread friendThread = new Thread() {
             @Override
             public void run() {
                 try {
@@ -94,7 +98,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
                 }
             }
         };
-        mFriendThread.start();
+        friendThread.start();
     }
 
     @Override
@@ -104,8 +108,6 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mSensorManager.registerListener(this, mMagneticField, mSensorManager.SENSOR_DELAY_NORMAL);
 
         mAlive = true;
-        mFriendThread.start();
-
         super.onResume();
     }
 
@@ -115,7 +117,6 @@ public class CameraActivity extends Activity implements SensorEventListener {
             mCamera.stopPreview();
         }
         mInPreview = false;
-        ((Scout) getApplication()).stopListening();
         mSensorManager.unregisterListener(this, mAccelerometer);
         mSensorManager.unregisterListener(this, mMagneticField);
 
@@ -126,15 +127,16 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onStop() {
+        mAlive = false;
         mCamera.release();
-        ((Scout) getApplication()).stopListening();
         super.onStop();
     }
 
     @Override
     public void onRestart() {
+        mAlive = true;
+        startTrackingThread();
         super.onRestart();
-        ((Scout) getApplication()).startListening();
         openCamera();
     }
 
@@ -256,11 +258,13 @@ public class CameraActivity extends Activity implements SensorEventListener {
             @Override
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
-                    mFriendLat = (float) object.getDouble("latitude");
-                    mFriendLong = (float) object.getDouble("longitude");
-                    Log.d("Friends", "Getting Friend data");
+                    mFriendLat = object.getDouble("latitude");
+                    mFriendLong =object.getDouble("longitude");
+
+                    Log.d("Application", "friend lat: " + String.valueOf(mFriendLat));
+                    Log.d("Application", "friend long: " + String.valueOf(mFriendLong));
                 } else {
-                    Log.d("mFriendLocation", "Error: " + e.getMessage());
+                    Log.d("Friends", "Error: " + e.getMessage());
                 }
             }
         });
@@ -302,14 +306,11 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
             Location myLoc = ((Scout) getApplication()).getLocation();
             if (myLoc != null) {
-                Log.d("loc", "CamLat: " + myLoc.getLatitude() + " CamLong: " +
+                Log.d("loc", "user Lat: " + myLoc.getLatitude() + " user Long: " +
                         myLoc.getLongitude());
                 double direction = getDirection(azimuth, myLoc.getLatitude(), myLoc.getLongitude(),
-                        41.703027, -86.239073);
-/*
-                double direction = getDirection(azimuth, 41.703682, -86.233733,
-                        41.703027, -86.239073);
-*/
+                        mFriendLat, mFriendLong);
+
                 mGLView.update((float) pitch, (float) direction);
             }
         }
