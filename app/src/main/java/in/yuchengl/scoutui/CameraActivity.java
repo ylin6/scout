@@ -39,9 +39,9 @@ public class CameraActivity extends Activity implements SensorEventListener {
     private float[] mMatrixValues;
     private float[] mGravityValues;
     private float[] mGeomagneticValues;
-    private String mFriendID;
-    private float mFriendLat;
-    private float mFriendLong;
+    private String mFriendID = "";
+    private double mFriendLat = 0.0f;
+    private double mFriendLong = 0.0f;
     private Thread mFriendThread;
     private Boolean mAlive;
 
@@ -73,11 +73,13 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mGLView = (MyGLSurfaceView) findViewById(R.id.overlay);
 
         /* Get friend's location */
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
-            mFriendID = null;
-        } else {
-            mFriendID = extras.getString("id");
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras == null) {
+                mFriendID = "";
+            } else {
+                mFriendID = extras.getString("uid");
+            }
         }
 
         mAlive = true;
@@ -104,8 +106,6 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mSensorManager.registerListener(this, mMagneticField, mSensorManager.SENSOR_DELAY_NORMAL);
 
         mAlive = true;
-        mFriendThread.start();
-
         super.onResume();
     }
 
@@ -126,6 +126,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onStop() {
+        mAlive = false;
         mCamera.release();
         ((Scout) getApplication()).stopListening();
         super.onStop();
@@ -133,6 +134,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onRestart() {
+        mAlive = true;
         super.onRestart();
         ((Scout) getApplication()).startListening();
         openCamera();
@@ -256,11 +258,10 @@ public class CameraActivity extends Activity implements SensorEventListener {
             @Override
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
-                    mFriendLat = (float) object.getDouble("latitude");
-                    mFriendLong = (float) object.getDouble("longitude");
-                    Log.d("Friends", "Getting Friend data");
+                    mFriendLat = object.getDouble("latitude");
+                    mFriendLong =object.getDouble("longitude");
                 } else {
-                    Log.d("mFriendLocation", "Error: " + e.getMessage());
+                    Log.d("Friends", "Error: " + e.getMessage());
                 }
             }
         });
