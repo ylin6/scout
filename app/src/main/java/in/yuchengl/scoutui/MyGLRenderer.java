@@ -31,7 +31,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 unused) {
         float[] scratch = new float[16];
 
-        // Redraw background color
+        /* Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0f);
         Matrix.multiplyMM(mModelViewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
@@ -39,7 +39,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         //Matrix.rotateM(mRotationMatrix, 0, mPitch, 1.0f, 0.0f, 0.0f);
         Matrix.multiplyMM(scratch, 0, mModelViewProjectionMatrix, 0, mRotationMatrix, 0);
 
-        mTriangle.draw(scratch);
+        mTriangle.draw(scratch);*/
     }
 
     @Override

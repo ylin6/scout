@@ -21,11 +21,13 @@ class MyGLSurfaceView extends GLSurfaceView {
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         getHolder().setFormat(PixelFormat.RGBA_8888);
 
+
         mRenderer = new MyGLRenderer();
 
         // Set the Renderer for drawing on the GLSurfaceView
         setRenderer(mRenderer);
     }
+
 
     public void update(float pitch, float direction) {
         mRenderer.update(pitch, direction);
