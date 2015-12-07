@@ -7,6 +7,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.Parse;
@@ -14,6 +15,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class Scout extends Application {
     private Location mLocation;
@@ -50,20 +52,19 @@ public class Scout extends Application {
                         location.getLongitude());
 
                 if (mBroadcasting) {
-                    ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
-                    query.getInBackground(ParseUser.getCurrentUser().getObjectId(),
-                            new GetCallback<ParseObject>() {
-                                @Override
-                                public void done(ParseObject parseObject, ParseException e) {
-                                    if (e == null) {
-                                        parseObject.put("latitude", mLocation.getLatitude());
-                                        parseObject.put("longitude", mLocation.getLongitude());
-                                        Log.d("Application", "location updated");
-                                    } else {
-                                        Log.e("Application", "Failed to put location to parse");
-                                    }
-                                }
-                            });
+                    ParseUser user = ParseUser.getCurrentUser();
+                    user.put("latitude", mLocation.getLatitude());
+                    user.put("longitude", mLocation.getLongitude());
+                    user.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Log.d("Application", "location updated");
+                            } else {
+                                Log.e("Application", "Failed to update location");
+                            }
+                        }
+                    });
                 }
             }
 

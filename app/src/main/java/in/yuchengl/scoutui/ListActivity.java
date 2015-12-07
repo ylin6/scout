@@ -29,8 +29,6 @@ import java.util.List;
 public class ListActivity extends AppCompatActivity {
     private ArrayList<FriendsListItem> mFriendsList;
     private CustomListAdapter mFriendsListAdaper;
-    private int mCount;
-    private int mSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +173,6 @@ public class ListActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

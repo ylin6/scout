@@ -36,13 +36,18 @@ class CustomListAdapter extends ArrayAdapter<FriendsListItem> {
         LayoutInflater listInflater = LayoutInflater.from(getContext());
         View customView = listInflater.inflate(R.layout.list_item_layout, parent, false);
 
-        String userArrayItemName = getItem(position).getName();
+        String name = getItem(position).getName();
+        Boolean live = getItem(position).getLive();
 
         TextView userName = (TextView) customView.findViewById(R.id.displayName);
         ImageView avatar = (ImageView) customView.findViewById(R.id.avi);
 
-        userName.setText(userArrayItemName);
-        avatar.setImageResource(mLogo2);
+        userName.setText(name);
+        if (live) {
+            avatar.setImageResource(mLogo1);
+        } else {
+            avatar.setImageResource(mLogo2);
+        }
 
         return customView;
 
