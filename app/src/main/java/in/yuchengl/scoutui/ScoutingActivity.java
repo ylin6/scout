@@ -12,6 +12,7 @@ import android.hardware.Camera;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -307,8 +308,9 @@ public class ScoutingActivity extends Activity implements SensorEventListener {
                         myLoc.getLongitude());
                 double direction = getDirection(azimuth, myLoc.getLatitude(), myLoc.getLongitude(),
                         mFriendLat, mFriendLong);
-
-                mGLView.update((float) pitch, (float) direction);
+                ImageView scoutRing = (ImageView) findViewById(R.id.scoutRing);
+                scoutRing.setRotation((float) -direction);
+                //mGLView.update((float) pitch, (float) direction);
             }
         }
     }
