@@ -58,6 +58,7 @@
             android:layout_height="match_parent"
             android:divider="@color/colorGrey"
             android:dividerHeight="2px"
+            android:focusable="true"
             android:id="@+id/pendingFriendList"
             />
     </LinearLayout>

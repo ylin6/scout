@@ -28,6 +28,17 @@
         android:src="@drawable/scoutlogo_ring"
         android:layout_centerInParent="true"
         android:id="@+id/scoutRing"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="0 M"
+        android:textSize="23sp"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/distance_text"
+        />
 
 
 </RelativeLayout>

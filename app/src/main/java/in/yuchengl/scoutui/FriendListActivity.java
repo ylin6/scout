@@ -188,6 +188,11 @@ public class FriendListActivity extends AppCompatActivity {
             startActivity(addNewFriend);
         }
 
+        else if (id== R.id.action_refreshlist){
+            updateFriendList();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

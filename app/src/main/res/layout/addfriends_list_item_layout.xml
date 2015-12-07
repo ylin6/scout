@@ -23,6 +23,7 @@
         android:textSize="20sp"
         android:id="@+id/acceptFriendButton"
         android:onClick="AcceptFriend"
+        android:focusable="false"
         android:layout_marginRight="5dp"/>
     <Button
         android:layout_width="90dp"
@@ -33,6 +34,7 @@
         android:textSize="20sp"
         android:id="@+id/denyFriendButton"
         android:layout_marginRight="5dp"
+        android:focusable="false"
         android:onClick="DenyFriend"/>
 
 

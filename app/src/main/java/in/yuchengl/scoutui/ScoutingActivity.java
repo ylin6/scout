@@ -13,6 +13,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -20,6 +21,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.List;
+
 
 public class ScoutingActivity extends Activity implements SensorEventListener {
     private Camera mCamera;
@@ -310,9 +312,28 @@ public class ScoutingActivity extends Activity implements SensorEventListener {
                         mFriendLat, mFriendLong);
                 ImageView scoutRing = (ImageView) findViewById(R.id.scoutRing);
                 scoutRing.setRotation((float) -direction);
+
+                // Print Distance to Screen
+                double distance = getDistance(myLoc.getLatitude(), myLoc.getLongitude(), mFriendLat, mFriendLong);
+                TextView distanceText = (TextView) findViewById(R.id.distance_text);
+                distanceText.setText(Double.toString(distance) + " M");
                 //mGLView.update((float) pitch, (float) direction);
             }
         }
+    }
+
+    public double getDistance(double startLat, double startLong, double destLat,
+                            double destLong){
+
+        double R = 6372.8 * 1000; // Earth Diameter in Meters
+        double dLat = Math.toRadians(startLat - destLat);
+        double dLong = Math.toRadians(startLong - destLong);
+        startLat = Math.toRadians(startLat);
+        destLat = Math.toRadians(destLat);
+
+        double a = Math.pow(Math.sin(dLat/2),2) + Math.pow(Math.sin(dLong/2),2) * Math.cos(startLat) * Math.cos(destLat);
+        double c = 2* Math.asin(Math.sqrt(a));
+        return R * c;
     }
 
 
