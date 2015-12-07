@@ -28,7 +28,7 @@ public class Scout extends Application {
     }
 
     public void startListening() {
-        mLocationManager.requestLocationUpdates(mLocationManager.NETWORK_PROVIDER, 400, 1,
+        mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 400, 1,
                 mLocationListener);
     }
 
@@ -53,18 +53,21 @@ public class Scout extends Application {
 
                 if (mBroadcasting) {
                     ParseUser user = ParseUser.getCurrentUser();
-                    user.put("latitude", mLocation.getLatitude());
-                    user.put("longitude", mLocation.getLongitude());
-                    user.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                Log.d("Application", "location updated");
-                            } else {
-                                Log.e("Application", "Failed to update location");
+
+                    if (user != null) {
+                        user.put("latitude", mLocation.getLatitude());
+                        user.put("longitude", mLocation.getLongitude());
+                        user.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    Log.d("Application", "location updated");
+                                } else {
+                                    Log.e("Application", "Failed to update location");
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
 

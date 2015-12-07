@@ -310,13 +310,16 @@ public class ScoutingActivity extends Activity implements SensorEventListener {
                         myLoc.getLongitude());
                 double direction = getDirection(azimuth, myLoc.getLatitude(), myLoc.getLongitude(),
                         mFriendLat, mFriendLong);
+                /*double direction = getDirection(azimuth, 41.702156f, -86.234436f,
+                                mFriendLat, mFriendLong);
+                */
                 ImageView scoutRing = (ImageView) findViewById(R.id.scoutRing);
                 scoutRing.setRotation((float) -direction);
 
                 // Print Distance to Screen
                 double distance = getDistance(myLoc.getLatitude(), myLoc.getLongitude(), mFriendLat, mFriendLong);
                 TextView distanceText = (TextView) findViewById(R.id.distance_text);
-                distanceText.setText(Double.toString(distance) + " M");
+                distanceText.setText(String.format("%.2f", distance) + " M");
                 //mGLView.update((float) pitch, (float) direction);
             }
         }

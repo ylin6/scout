@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendListActivity extends AppCompatActivity {
-    private ArrayList<FriendsListItem> mFriendList;
+    private ArrayList<FriendListItem> mFriendList;
     private FriendListAdapter mFriendListAdapter;
 
     @Override
@@ -138,7 +138,7 @@ public class FriendListActivity extends AppCompatActivity {
                         String name = parseObject.getString("username");
                         String id = parseObject.getObjectId();
                         Boolean live = parseObject.getBoolean("live");
-                        FriendsListItem friend = new FriendsListItem(name, id, live);
+                        FriendListItem friend = new FriendListItem(name, id, live);
                         mFriendList.add(friend);
                         mFriendListAdapter.notifyDataSetChanged();
                     } else {
