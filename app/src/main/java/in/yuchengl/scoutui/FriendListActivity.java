@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendListActivity extends AppCompatActivity {
-    private ArrayList<FriendsListItem> mFriendsList;
-    private FriendListAdapter mFriendsListAdapter;
+    private ArrayList<FriendsListItem> mFriendList;
+    private FriendListAdapter mFriendListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +38,19 @@ public class FriendListActivity extends AppCompatActivity {
         redirectIfNotLoggedIn(this);
 
         /* FRIENDS LIST INITIALIZATION */
-        mFriendsList = new ArrayList<>();
-        mFriendsListAdapter = new FriendListAdapter(this, mFriendsList);
+        mFriendList = new ArrayList<>();
+        mFriendListAdapter = new FriendListAdapter(this, mFriendList);
 
-        ListView friendsListView = (ListView) findViewById(R.id.friendList);
-        friendsListView.setAdapter(mFriendsListAdapter);
-        updateFriendsList();
+        ListView friendListView = (ListView) findViewById(R.id.friendList);
+        friendListView.setAdapter(mFriendListAdapter);
+        updateFriendList();
 
-        friendsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        friendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String name = mFriendsListAdapter.getItem(position).getName();
-                String uid = mFriendsListAdapter.getItem(position).getId();
-                Boolean live = mFriendsListAdapter.getItem(position).getLive();
+                String name = mFriendListAdapter.getItem(position).getName();
+                String uid = mFriendListAdapter.getItem(position).getId();
+                Boolean live = mFriendListAdapter.getItem(position).getLive();
 
                 if (!live) {
                     Toast.makeText(getApplicationContext(), name + " is not live",
@@ -121,15 +121,17 @@ public class FriendListActivity extends AppCompatActivity {
         });
     }
 
-    private void updateFriendsList() {
-        List<String> friendsList = ParseUser.getCurrentUser().getList("Friends");
+    private void updateFriendList() {
+        List<String> friendList = ParseUser.getCurrentUser().getList("Friends");
+        mFriendList.clear();
+        mFriendListAdapter.notifyDataSetChanged();
 
-        if (friendsList == null) return;
+        if (friendList == null) return;
 
-        int size = friendsList.size();
+        int size = friendList.size();
         for (int i = 0; i < size; i++) {
             ParseQuery<ParseObject> friendQuery = ParseQuery.getQuery("_User");
-            friendQuery.getInBackground(friendsList.get(i), new GetCallback<ParseObject>() {
+            friendQuery.getInBackground(friendList.get(i), new GetCallback<ParseObject>() {
                 @Override
                 public void done(ParseObject parseObject, ParseException e) {
                     if (e == null) {
@@ -137,8 +139,8 @@ public class FriendListActivity extends AppCompatActivity {
                         String id = parseObject.getObjectId();
                         Boolean live = parseObject.getBoolean("live");
                         FriendsListItem friend = new FriendsListItem(name, id, live);
-                        mFriendsList.add(friend);
-                        mFriendsListAdapter.notifyDataSetChanged();
+                        mFriendList.add(friend);
+                        mFriendListAdapter.notifyDataSetChanged();
                     } else {
                         Log.d("Application", "friend not found");
                     }

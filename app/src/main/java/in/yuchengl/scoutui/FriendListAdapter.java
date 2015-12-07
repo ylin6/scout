@@ -18,15 +18,15 @@ import java.util.ArrayList;
 class FriendListAdapter extends ArrayAdapter<FriendsListItem> {
 
     private Context mContext;
-    private int mLogo1;
-    private int mLogo2;
+    private int mLogoOnline;
+    private int mLogoOffline;
 
   FriendListAdapter(Context context, ArrayList<FriendsListItem> friendsList) {
       super(context, R.layout.list_item_layout, friendsList);
       mContext = context;
-      mLogo1 = mContext.getResources().getIdentifier("scoutlogo",
+      mLogoOnline = mContext.getResources().getIdentifier("scoutlogo",
               "drawable", "in.yuchengl.scoutui");
-      mLogo2 = mContext.getResources().getIdentifier("scoutlogo2",
+      mLogoOffline = mContext.getResources().getIdentifier("scoutlogo2",
               "drawable", "in.yuchengl.scoutui");
 
   }
@@ -44,9 +44,9 @@ class FriendListAdapter extends ArrayAdapter<FriendsListItem> {
 
         userName.setText(name);
         if (live) {
-            avatar.setImageResource(mLogo1);
+            avatar.setImageResource(mLogoOnline);
         } else {
-            avatar.setImageResource(mLogo2);
+            avatar.setImageResource(mLogoOffline);
         }
 
         return customView;

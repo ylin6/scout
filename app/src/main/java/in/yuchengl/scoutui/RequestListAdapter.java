@@ -10,56 +10,41 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Yucheng on 12/5/15.
  */
-public class RequestListAdapter extends ArrayAdapter<FriendsListItem> {
+public class RequestListAdapter extends ArrayAdapter<RequestListItem> {
 
-    private Context c;
-    private int logo1;
-    private int logo2;
+    private Context mContext;
 
-    RequestListAdapter(Context context, FriendsListItem[] users) {
+    RequestListAdapter(Context context, ArrayList<RequestListItem> users) {
         super(context, R.layout.addfriends_list_item_layout, users);
-        this.c = context;
-        this.logo1 = this.c.getResources().getIdentifier("scoutlogo", "drawable", "in.yuchengl.scoutui");
-        this.logo2 = this.c.getResources().getIdentifier("scoutlogo2", "drawable", "in.yuchengl.scoutui");
+        this.mContext = context;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent ){
         LayoutInflater listInflater = LayoutInflater.from(getContext());
         View customView = listInflater.inflate(R.layout.addfriends_list_item_layout, parent, false);
-
-        final String userArrayItemName = getItem(position).getName();
-        /*
-        String userArrayItemImage = getItem(position).mImage;
-        Boolean userArrayItemStatus = getItem(position).mLive;*/
-
         final TextView userName = (TextView) customView.findViewById(R.id.displayName);
-        ImageView avatar = (ImageView) customView.findViewById(R.id.avi);
         Button acceptFriendBtn = (Button) customView.findViewById(R.id.acceptFriendButton);
         Button denyFriendBtn = (Button) customView.findViewById(R.id.denyFriendButton);
+
         acceptFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Approve", userArrayItemName);
             }
         });
 
         denyFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Deny", userArrayItemName);
             }
         });
 
-
-
-
-        userName.setText(userArrayItemName);
-        avatar.setImageResource(this.logo2);
-
+        userName.setText(getItem(position).getInviterName());
         return customView;
 
     }

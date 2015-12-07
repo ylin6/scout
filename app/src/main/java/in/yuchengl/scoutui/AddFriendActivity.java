@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -20,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddFriendActivity extends AppCompatActivity {
-    private ArrayList<FriendsListItem> mRequestsList;
-    private RequestListAdapter mRequestsListAdaper;
+    private ArrayList<RequestListItem> mRequestList;
+    private RequestListAdapter mRequestListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,44 @@ public class AddFriendActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* FRIEND REQUEST LIST INITIALIZATION */
+        mRequestList = new ArrayList<>();
+        mRequestListAdapter = new RequestListAdapter(this, mRequestList);
 
+        ListView RequestListView = (ListView) findViewById(R.id.pendingFriendList);
+        RequestListView.setAdapter(mRequestListAdapter);
+        updateRequestList();
+    }
+
+    void updateRequestList() {
+        Log.d("Application", "update called");
+        mRequestList.clear();
+        mRequestListAdapter.notifyDataSetChanged();
+
+        ParseQuery<ParseObject> requestQuery = ParseQuery.getQuery("FriendRequest");
+        requestQuery.whereEqualTo("requestTo", ParseUser.getCurrentUser().getUsername());
+        requestQuery.whereEqualTo("status", "pending");
+        requestQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null) {
+                    for(int i = 0; i < list.size(); i++) {
+                        String status = list.get(i).getString("status");
+                        if (!status.equals("pending")) {
+                            continue;
+                        }
+                        String name = list.get(i).getString("requestFrom");
+                        String rId = list.get(i).getObjectId();
+                        RequestListItem request = new RequestListItem(name, rId);
+                        mRequestList.add(request);
+                        mRequestListAdapter.notifyDataSetChanged();
+                        Log.d("Application", "added request to list");
+                    }
+                } else {
+                    Log.d("Application", "error" + e.getMessage());
+                }
+            }
+        });
     }
 
     public void AddNewFriend(View view) {
@@ -45,15 +83,14 @@ public class AddFriendActivity extends AppCompatActivity {
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> list, ParseException e) {
-                    if (e == null){
-                        Context context = getApplicationContext();
-                        String message = "Request has already been made. Status is : " + list.get(0).getString("status");
-                        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-                        toast.show();
+                    if (e != null) {
+                        Log.d("Application", e.getMessage());
                     }
 
-                    else{
-                        Log.d("Application", e.getMessage());
+                    if (list.size() > 0){
+                        String message = "Request already made: " + list.get(0).getString("status");
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    } else {
                         ParseObject friendRequest = new ParseObject("FriendRequest");
                         friendRequest.put("requestFrom", currentUser.getUsername());
                         friendRequest.put("requestTo", add_friend_username);
@@ -62,16 +99,12 @@ public class AddFriendActivity extends AppCompatActivity {
                             @Override
                             public void done(ParseException e) {
                                 if(e == null){
-                                    Context context = getApplicationContext();
-                                    Toast toast = Toast.makeText(context, "Request Sent", Toast.LENGTH_SHORT);
-                                    toast.show();
-                                }
-
-                                else{
-                                    Context context = getApplicationContext();
-                                    Toast toast = Toast.makeText(context, "Request Failed", Toast.LENGTH_SHORT);
+                                    Toast.makeText(getApplicationContext(), "Request Sent",
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Request Failed",
+                                            Toast.LENGTH_SHORT).show();
                                     Log.d("Application", e.getMessage());
-                                    toast.show();
                                 }
                             }
                         });

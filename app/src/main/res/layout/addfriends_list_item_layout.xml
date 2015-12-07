@@ -4,15 +4,6 @@
     android:background="@color/colorPrimaryDark"
     android:layout_height="70dp">
 
-
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:src="@drawable/scoutlogo"
-        android:padding="8dp"
-        android:id="@+id/avi"/>
-
     <TextView
         android:layout_width="0dp"
         android:layout_weight="5"
