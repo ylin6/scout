@@ -28,6 +28,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AddFriendActivity extends AppCompatActivity {
+    private ArrayList<FriendsListItem> mRequestsList;
+    private CustomListAdapter2 mRequestsListAdaper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,21 +38,10 @@ public class AddFriendActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FriendsListItem user1 = new FriendsListItem("HotMilf91", "image.png", true);
-        FriendsListItem user2 = new FriendsListItem("PeterPuffer", "image2.png", true);
-        FriendsListItem user3 = new FriendsListItem("xX_Flame_Xx", "image2.png", true);
-
-        FriendsListItem[] friends = {user1, user2, user3};
-
-        ListAdapter friendListAdapter = new CustomListAdapter2(this, friends);
-
-        ListView friendsList = (ListView) findViewById(R.id.pendingFriendList);
-        friendsList.setAdapter(friendListAdapter);
 
     }
 
     public void AddNewFriend(View view) {
-
         EditText username_textfield = (EditText) findViewById(R.id.add_friend_username);
         final String add_friend_username = username_textfield.getText().toString();
 
