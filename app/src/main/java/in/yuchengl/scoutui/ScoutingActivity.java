@@ -13,17 +13,14 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
-
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.List;
-import java.util.ServiceConfigurationError;
 
-public class CameraActivity extends Activity implements SensorEventListener {
+public class ScoutingActivity extends Activity implements SensorEventListener {
     private Camera mCamera;
     private MyGLSurfaceView mGLView;
     private SurfaceView mPreview;

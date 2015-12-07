@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -26,9 +25,9 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity {
+public class FriendListActivity extends AppCompatActivity {
     private ArrayList<FriendsListItem> mFriendsList;
-    private CustomListAdapter mFriendsListAdaper;
+    private FriendListAdapter mFriendsListAdaper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class ListActivity extends AppCompatActivity {
 
         /* FRIENDS LIST INITIALIZATION */
         mFriendsList = new ArrayList<>();
-        mFriendsListAdaper = new CustomListAdapter(this, mFriendsList);
+        mFriendsListAdaper = new FriendListAdapter(this, mFriendsList);
 
         ListView friendsListView = (ListView) findViewById(R.id.friendList);
         friendsListView.setAdapter(mFriendsListAdaper);
@@ -59,7 +58,7 @@ public class ListActivity extends AppCompatActivity {
                     return;
                 }
 
-                Intent scoutIntent = new Intent(ListActivity.this, CameraActivity.class);
+                Intent scoutIntent = new Intent(FriendListActivity.this, ScoutingActivity.class);
                 scoutIntent.putExtra("name", name);
                 scoutIntent.putExtra("uid", uid);
                 startActivity(scoutIntent);

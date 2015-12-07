@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_list" tools:context="in.yuchengl.scoutui.ListActivity">
+    tools:showIn="@layout/activity_list" tools:context="in.yuchengl.scoutui.FriendListActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

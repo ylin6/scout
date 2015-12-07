@@ -3,24 +3,15 @@ package in.yuchengl.scoutui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -53,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null) {
                     Toast.makeText(getApplicationContext(), "Logged in",
                             Toast.LENGTH_SHORT).show();
-                    Intent nextIntent = new Intent(getApplicationContext(), ListActivity.class);
+                    Intent nextIntent = new Intent(getApplicationContext(), FriendListActivity.class);
                     startActivity(nextIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), e.getLocalizedMessage().toString(),
@@ -67,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
         } else {
-            Intent redirectIntent = new Intent(context, ListActivity.class);
+            Intent redirectIntent = new Intent(context, FriendListActivity.class);
             context.startActivity(redirectIntent);
         }
     }

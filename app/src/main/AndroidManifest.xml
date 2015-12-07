@@ -39,12 +39,12 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".ListActivity"
+            android:name=".FriendListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".CameraActivity"
+            android:name=".ScoutingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>

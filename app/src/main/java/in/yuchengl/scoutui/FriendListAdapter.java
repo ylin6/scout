@@ -15,13 +15,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-class CustomListAdapter extends ArrayAdapter<FriendsListItem> {
+class FriendListAdapter extends ArrayAdapter<FriendsListItem> {
 
     private Context mContext;
     private int mLogo1;
     private int mLogo2;
 
-  CustomListAdapter(Context context, ArrayList<FriendsListItem> friendsList) {
+  FriendListAdapter(Context context, ArrayList<FriendsListItem> friendsList) {
       super(context, R.layout.list_item_layout, friendsList);
       mContext = context;
       mLogo1 = mContext.getResources().getIdentifier("scoutlogo",
