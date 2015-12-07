@@ -27,7 +27,7 @@ import java.util.List;
 
 public class FriendListActivity extends AppCompatActivity {
     private ArrayList<FriendsListItem> mFriendsList;
-    private FriendListAdapter mFriendsListAdaper;
+    private FriendListAdapter mFriendsListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +39,18 @@ public class FriendListActivity extends AppCompatActivity {
 
         /* FRIENDS LIST INITIALIZATION */
         mFriendsList = new ArrayList<>();
-        mFriendsListAdaper = new FriendListAdapter(this, mFriendsList);
+        mFriendsListAdapter = new FriendListAdapter(this, mFriendsList);
 
         ListView friendsListView = (ListView) findViewById(R.id.friendList);
-        friendsListView.setAdapter(mFriendsListAdaper);
+        friendsListView.setAdapter(mFriendsListAdapter);
         updateFriendsList();
 
         friendsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String name = mFriendsListAdaper.getItem(position).getName();
-                String uid = mFriendsListAdaper.getItem(position).getId();
-                Boolean live = mFriendsListAdaper.getItem(position).getLive();
+                String name = mFriendsListAdapter.getItem(position).getName();
+                String uid = mFriendsListAdapter.getItem(position).getId();
+                Boolean live = mFriendsListAdapter.getItem(position).getLive();
 
                 if (!live) {
                     Toast.makeText(getApplicationContext(), name + " is not live",
@@ -138,7 +138,7 @@ public class FriendListActivity extends AppCompatActivity {
                         Boolean live = parseObject.getBoolean("live");
                         FriendsListItem friend = new FriendsListItem(name, id, live);
                         mFriendsList.add(friend);
-                        mFriendsListAdaper.notifyDataSetChanged();
+                        mFriendsListAdapter.notifyDataSetChanged();
                     } else {
                         Log.d("Application", "friend not found");
                     }
